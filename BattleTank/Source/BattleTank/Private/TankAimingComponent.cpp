@@ -28,21 +28,23 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
+	// Calculate a launch velocity for a projectile to hit a specific point with such LaunchSpeed, start+hit location
 	bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity
 	(
 		this,
-		OutLaunchVelocity,
+		OutLaunchVelocity,			// TossVelocity -- which is the output
 		StartLocation,
 		HitLocation,
 		LaunchSpeed,
-		false,
-		0,
-		0,
+		false,						// Use HighArc ( take more time and higher) or LowArc ( takes less time, lower)	
+		0,							// Collision Radius = 0		
+		0,							// Override Gravity ? means fuck the gravity man
 		ESuggestProjVelocityTraceOption::DoNotTrace
-	);
-	if (bHaveAimSolution)
+	);			
+	if (bHaveAimSolution)			// If true, we've already had a Launch velocity vector, which has the angle to shoot too
 	{
-		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		auto AimDirection = OutLaunchVelocity.GetSafeNormal();	// normalized this vector, by divide the OutLaunchVelocity with its length
+																// So it becomes unit vector which 0<=x,y,z<=1
 		MoveBarrelTowards(AimDirection);
 		auto Time = GetWorld()->GetTimeSeconds();
 		UE_LOG(LogTemp, Warning, TEXT("%f: Aim solve found"), Time)
@@ -60,9 +62,10 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
 	// Work-out difference between current barrel roation, and AimDirection
-	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
-	auto AimAsRotator = AimDirection.Rotation();
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();		// Get the foward ( X-Axis) unit vector  then get its rotation
+	auto AimAsRotator = AimDirection.Rotation();					// This is the end angle-result by taking the rotation of the launch velocity
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
-	Barrel->Elevate(DeltaRotator.Pitch); // TODO remove magic number
+	Barrel->Elevate(DeltaRotator.Pitch);		// How many unit location the barrel has to come up.
+	//Turret->Rotate(DeltaRotator.Yaw);
 }

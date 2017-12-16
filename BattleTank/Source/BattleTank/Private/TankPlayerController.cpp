@@ -34,9 +34,9 @@ void ATankPlayerController::AimTowardsCrosshair()
 	}
 	
 	FVector HitLocation; // OUT parameter
-	if (GetSightRayHitLocation(HitLocation))
+	if (GetSightRayHitLocation(OUT HitLocation))
 	{
-		GetControlledTank()->AimAt(HitLocation);
+		GetControlledTank()->AimAt(OUT HitLocation);
 	}
 }
 // rebmeced12  down 125k; MSBJOY
@@ -50,7 +50,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	auto ScreenLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
 	/// Done, ScreenLocation is the crosshair location
 	FVector LookDirection;
-	if (GetLookDirection(ScreenLocation, LookDirection))
+	if (GetLookDirection(ScreenLocation,OUT LookDirection))
 	{
 		// Line-trace along that LookDirection, and see what we hit (up to max range)
 		GetLookVectorHitLocation(LookDirection, HitLocation);
