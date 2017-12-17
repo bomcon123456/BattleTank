@@ -12,7 +12,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	bWantsBeginPlay = true;
+//	bWantsBeginPlay = false;
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
@@ -20,11 +20,13 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet) { return; }
 	Barrel = BarrelToSet;
 }
 
 void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 {
+	if (!TurretToSet) { return; }
 	Turret = TurretToSet;
 }
 
@@ -43,8 +45,8 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		HitLocation,
 		LaunchSpeed,
 		false,						// Use HighArc ( take more time and higher) or LowArc ( takes less time, lower)	
-		0,							// Collision Radius = 0		
-		0,							// Override Gravity ? means fuck the gravity man
+		0.0f,							// Collision Radius = 0		
+		0.0f,							// Override Gravity ? means fuck the gravity man
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	);			
 	if (bHaveAimSolution)			// If true, we've already had a Launch velocity vector, which has the angle to shoot too
@@ -52,10 +54,6 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();	// normalized this vector, by divide the OutLaunchVelocity with its length
 																// So it becomes unit vector which 0<=x,y,z<=1
 		MoveBarrelTowards(AimDirection);
-		MoveTurretAside(AimDirection);
-		auto Time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f: Aim solve found"), Time)
-
 	}
 	else
 	{
@@ -74,13 +72,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
 	Barrel->Elevate(DeltaRotator.Pitch);		// How many unit location the barrel has to come up.
-}
-
-void UTankAimingComponent::MoveTurretAside(FVector AimDirection)
-{
-	auto TurretRotator = Turret->GetForwardVector().Rotation();
-	auto AimAsRotator = AimDirection.Rotation();
-	auto DeltaRotator = AimAsRotator - TurretRotator;
-
+	if (FMath::Abs(DeltaRotator.Yaw) > 180.0f)
+		DeltaRotator.Yaw *= -1.0f;
 	Turret->Rotate(DeltaRotator.Yaw);
 }
