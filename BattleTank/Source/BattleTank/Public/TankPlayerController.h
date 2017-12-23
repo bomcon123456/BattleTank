@@ -28,11 +28,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY(EditAnywhere,Category= "Crosshair")
+	UPROPERTY(EditDefaultsOnly,Category= "Crosshair")
 	float CrosshairXLocation = 0.5f;
-	UPROPERTY(EditAnywhere, Category = "Crosshair")
+	UPROPERTY(EditDefaultsOnly, Category = "Crosshair")
 	float CrosshairYLocation = 0.3333f;
-	UPROPERTY(EditAnywhere, Category= "Crosshair")
+	UPROPERTY(EditDefaultsOnly, Category= "Crosshair")
 	float LineTraceRange = 1000000;
 		
 
