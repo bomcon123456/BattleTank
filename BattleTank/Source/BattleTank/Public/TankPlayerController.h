@@ -27,6 +27,11 @@ public:
 	*/
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	// Be in protected because the BP derived from this is a subclass => can access.
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		ATank* GetControlledTank() const;
+
 private:
 	UPROPERTY(EditDefaultsOnly,Category= "Crosshair")
 	float CrosshairXLocation = 0.5f;
@@ -37,7 +42,6 @@ private:
 		
 
 	// Get the pointer to the controlling tank
-	ATank* GetControlledTank() const;
 
 	// Start the tank moving the barrel so that a shot would hit where
 	// the crosshair intersects the world

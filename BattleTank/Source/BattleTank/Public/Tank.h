@@ -29,6 +29,7 @@ public:
 	void Fire();
 
 protected:
+	UPROPERTY(BlueprintReadOnly)
 	UTankAimingComponent* TankAimingComponent = nullptr;
 	
 /*	UPROPERTY(BlueprintReadOnly)		// This make the blueprint derived one can call this variable (in event graph!!)

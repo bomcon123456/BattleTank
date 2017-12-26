@@ -29,6 +29,7 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::LaunchProjectile(float Speed)
 {
+	if(!ProjectileMovement) {return; }
 	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 												// Foward Vector return the unit vector (1,0,0) which is the 
 												// currently foward rotation of the Barrel
