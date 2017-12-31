@@ -19,9 +19,12 @@ public:
 	// Set throttle [-1,1]
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void SetThrottle(float Throttle);
-	
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
 	// Force = mass * acceleration
 	// Max force per track, in Newtons 
 	UPROPERTY(EditDefaultsOnly)
-	float TrackmaxDrivingForce = 400000;	// Assume 40 tons tanks, 1g acceleration.
+		float TrackmaxDrivingForce = 400000;    // Assume 40 tons tanks, 1g acceleration.
+private:
+	UTankTrack();
 };
