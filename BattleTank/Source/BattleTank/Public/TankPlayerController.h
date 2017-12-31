@@ -7,10 +7,10 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
-class ATank;
+class UTankAimingComponent;
 
 /**
- * 
+ * Responsible for helping the player aim
  */
 UCLASS()
 class BATTLETANK_API ATankPlayerController : public APlayerController
@@ -27,10 +27,17 @@ public:
 	*/
 	virtual void Tick(float DeltaTime) override;
 
-protected:
-	// Be in protected because the BP derived from this is a subclass => can access.
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-		ATank* GetControlledTank() const;
+protected: 	// Be in protected because the BP derived from this is a subclass => can access.
+
+	/*
+	* This means it will create an event with this fuction name
+	* And implemented by the BP	
+	* Call as a Thunk !!!
+	* If you want a default definition for this function, use BlueprintNativeEvent
+	* It'll be the same but you can create FunctionName_Implementation(Same_Parameters) in C++ and run it if BP doesn't call it.
+	*/
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
 
 private:
 	UPROPERTY(EditDefaultsOnly,Category= "Crosshair")

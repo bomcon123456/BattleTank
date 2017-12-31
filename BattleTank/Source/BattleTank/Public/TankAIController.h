@@ -7,7 +7,6 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
-class ATank;
 /**
  * 
  */
@@ -21,8 +20,6 @@ private:
 									   // virtual means that child of this funct can override this funct
 									   // Declare this only using void BeginPlay()
 	virtual void Tick(float DeltaTime) override;
-	ATank* GetControlledTank() const;
-	ATank* GetPlayerTank() const;
 
 	// How close can the AI tank get to the player
 	float AcceptanceRadius = 3000;

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
-#include "Tank.h"
+#include "TankAimingComponent.h"
 
 
 #define OUT
@@ -9,10 +9,18 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();			// Do this function in the parent first!
 
-	auto ControlledTank = GetControlledTank();
+	{
+	auto ControlledTank = GetPawn();
 	if (!ControlledTank)
 		UE_LOG(LogTemp, Warning, TEXT("PlayerController isn't possesing any tank"))
-	UE_LOG(LogTemp, Warning, TEXT("PlayerController is possesed by %s"), *(ControlledTank->GetName()))
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController is possesed by %s"), *(ControlledTank->GetName()))
+	}
+	
+	{
+	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) { return; }
+	FoundAimingComponent(AimingComponent);
+	}
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -22,25 +30,16 @@ void ATankPlayerController::Tick(float DeltaTime)
 
 }
 
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());  
-}
-
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!GetControlledTank())	//If can't find any tank to controll
-	{
-		return;	
-	}
-	
+	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) { return; }
 	FVector HitLocation; // OUT parameter
 	if (GetSightRayHitLocation(OUT HitLocation))
 	{
-		GetControlledTank()->AimAt(OUT HitLocation);
+		AimingComponent->AimAt(OUT HitLocation);
 	}
 }
-// rebmeced12  down 125k; MSBJOY
 
 // Get world location if linetrace through crosshair, true if it hits landscape
 bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const

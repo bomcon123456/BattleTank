@@ -8,10 +8,7 @@
 
 // Foward Declaration
 class UTankBarrel;
-class UTankTurret;
 class AProjectile;
-class UTankAimingComponent;
-class UTankMovementComponent;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -19,21 +16,10 @@ class BATTLETANK_API ATank : public APawn
 	GENERATED_BODY()
 
 public:
-	void AimAt(FVector HitLocation);
-
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void SetTurretReference(UTankTurret* TurretToSet);
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
 	void Fire();
-
-protected:
-	UPROPERTY(BlueprintReadOnly)
-	UTankAimingComponent* TankAimingComponent = nullptr;
 	
-/*	UPROPERTY(BlueprintReadOnly)		// This make the blueprint derived one can call this variable (in event graph!!)
-	UTankMovementComponent* TankMovementComponent = nullptr; */
+/*	UPROPERTY(BlueprintReadOnly)		// This make the blueprint derived one can call this variable (in event graph!!)*/
 
 private:
 	// Sets default values for this pawn's properties
